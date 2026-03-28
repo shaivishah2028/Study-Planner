@@ -3,260 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Study Assistant Pro</title>
+    <title>Elite GCSE/A-Level Study Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #22c55e;
-            --danger: #ef4444;
-            --bg: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text: #f8fafc;
+            --primary: #c3a6ff;
+            --secondary: #ff7eb9;
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
-            color: var(--text);
-            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            color: white;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-        }
-
-        /* --- UI Elements --- */
-        header {
-            text-align: center;
-            padding: 80px 20px;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            margin: 0;
-            background: linear-gradient(135deg, #818cf8, #d946ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            padding: 20px;
         }
 
         .container {
+            width: 100%;
+            max-width: 1000px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            width: 90%;
-            max-width: 1200px;
-            padding-bottom: 50px;
         }
 
-        /* --- Interactive Cards --- */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+
+        /* Glass Panel Styling */
+        .panel {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .card:hover {
-            transform: translateY(-12px) scale(1.02);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
+        h1, h2 { margin-bottom: 20px; color: var(--primary); text-align: center; }
 
-        .card h3 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: #818cf8;
-        }
-
-        /* --- Pop-up / Modal System --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-        }
-
-        .modal-content {
-            background: #1e293b;
-            width: 90%;
-            max-width: 500px;
-            padding: 40px;
-            border-radius: 28px;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: zoomIn 0.3s ease-out;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+        /* Configurator */
+        .config-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        select, input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
             color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 8px;
+            border-radius: 8px;
+            outline: none;
         }
 
-        .close-btn:hover { background: var(--danger); }
+        /* Grade Predictor */
+        .predictor-box { text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; }
+        .grade-display { font-size: 3rem; font-weight: 700; color: var(--secondary); margin: 10px 0; }
 
-        /* --- Inner Components --- */
-        .timer-val { font-size: 4rem; font-weight: 800; margin: 20px 0; font-variant-numeric: tabular-nums; }
-        
-        .action-btn {
+        /* Task List */
+        .task-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .task-input-group input { flex: 1; }
+        .btn {
             background: var(--primary);
-            color: white;
             border: none;
-            padding: 14px 28px;
+            color: #1e1b4b;
+            padding: 10px 20px;
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
+            transition: 0.3s;
         }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(195, 166, 255, 0.4); }
 
-        .action-btn:active { transform: scale(0.98); }
-
-        .progress-bar {
-            background: #334155;
-            height: 12px;
-            border-radius: 6px;
-            margin: 10px 0 20px;
-            overflow: hidden;
+        .task-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid gray;
         }
+        .conf-low { border-left-color: #ff4d4d; }
+        .conf-mid { border-left-color: #ffcc00; }
+        .conf-high { border-left-color: #00ff88; }
 
-        .progress-fill { height: 100%; transition: width 1s ease-in-out; }
-
-        /* --- Animations --- */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Study Assistant AI</h1>
-        <p style="opacity: 0.7;">Hyper-personalized revision for GCSE & A-Levels</p>
-    </header>
+    <h1 style="font-size: 2.5rem; margin-bottom: 40px;">Elite Study Space 🚀</h1>
 
     <div class="container">
-        <div class="card" onclick="openModal('plan')">
-            <h3>📅 Revision Plans</h3>
-            <p>AI-generated schedules based on your exam boards.</p>
+        
+        <div class="panel">
+            <h2>Exam Board Config</h2>
+            <div class="config-row">
+                <span>Maths</span>
+                <select id="board-maths">
+                    <option value="edexcel">Edexcel</option>
+                    <option value="aqa">AQA</option>
+                </select>
+            </div>
+            <div class="config-row">
+                <span>English Lit</span>
+                <select id="board-english">
+                    <option value="aqa">AQA</option>
+                    <option value="edexcel">Edexcel</option>
+                </select>
+            </div>
+
+            <hr style="margin: 20px 0; opacity: 0.2;">
+
+            <h2>Grade Predictor</h2>
+            <div class="predictor-box">
+                <p>Enter Mock Score (%)</p>
+                <input type="number" id="mock-score" placeholder="e.g. 75" style="width: 80px; text-align: center;">
+                <button class="btn" onclick="calculateGrade()" style="margin-left: 10px;">Predict</button>
+                <div class="grade-display" id="grade-result">-</div>
+                <p id="grade-message">Enter a score to see your predicted GCSE grade.</p>
+            </div>
         </div>
 
-        <div class="card" onclick="openModal('explain')">
-            <h3>💡 Concept Explainer</h3>
-            <p>Complex topics simplified into plain English.</p>
+        <div class="panel">
+            <h2>Subject Topic Tracker</h2>
+            <div class="task-input-group">
+                <input type="text" id="task-name" placeholder="Topic (e.g. Algebra)">
+                <select id="task-conf">
+                    <option value="conf-low">Low Confidence</option>
+                    <option value="conf-mid">Medium</option>
+                    <option value="conf-high">High</option>
+                </select>
+                <button class="btn" onclick="addTask()">Add</button>
+            </div>
+            <div id="task-list">
+                </div>
         </div>
 
-        <div class="card" onclick="openModal('track')">
-            <h3>📊 Weak Areas</h3>
-            <p>Real-time tracking of where you need to focus.</p>
-        </div>
-
-        <div class="card" onclick="openModal('timer')">
-            <h3>⏱️ Pomodoro</h3>
-            <p>Deep work sessions with automated break tracking.</p>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <div id="modalBody"></div>
-        </div>
     </div>
 
     <script>
-        const modalOverlay = document.getElementById('modalOverlay');
-        const modalBody = document.getElementById('modalBody');
-        let timerInterval;
-        let timeLeft = 25 * 60;
+        // GRADE PREDICTION LOGIC (Based on roughly 2025 Edexcel/AQA boundaries)
+        function calculateGrade() {
+            const score = parseInt(document.getElementById('mock-score').value);
+            const board = document.getElementById('board-maths').value;
+            const resultDiv = document.getElementById('grade-result');
+            const messageDiv = document.getElementById('grade-message');
 
-        const views = {
-            plan: `<h2>Revision Plan</h2><p>Your AI has scheduled <strong>3 biology modules</strong> for this weekend. Ready to start?</p><button class="action-btn">Sync to Calendar</button>`,
-            
-            explain: `<h2>Ask AI</h2><input type="text" placeholder="Explain Quantum Physics..." style="width:100%; padding:12px; border-radius:8px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white;"><button class="action-btn">Generate Explanation</button>`,
-            
-            track: `<h2>Your Performance</h2>
-                    <p>Mathematics</p><div class="progress-bar"><div class="progress-fill" style="width:80%; background:var(--accent);"></div></div>
-                    <p>Physics</p><div class="progress-bar"><div class="progress-fill" style="width:35%; background:var(--danger);"></div></div>`,
-            
-            timer: `<h2>Pomodoro Timer</h2><div class="timer-val" id="timerDisplay">25:00</div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="action-btn" id="startBtn" onclick="toggleTimer()">Start</button>
-                        <button class="action-btn" style="background:#475569" onclick="resetTimer()">Reset</button>
-                    </div>`
-        };
+            if (isNaN(score)) return;
 
-        function openModal(type) {
-            modalBody.innerHTML = views[type];
-            modalOverlay.style.display = 'flex';
+            let grade = "U";
+            let nextGrade = "";
+
+            // Simple logic: Edexcel Maths Higher typically needs ~80% for a 9
+            if (score >= 80) grade = "9";
+            else if (score >= 70) grade = "8";
+            else if (score >= 60) grade = "7";
+            else if (score >= 50) grade = "6";
+            else if (score >= 40) grade = "5";
+            else grade = "4 or below";
+
+            resultDiv.innerText = grade;
+            messageDiv.innerText = `Based on ${board.toUpperCase()} typical boundaries, you're on track for a ${grade}!`;
         }
 
-        function closeModal() {
-            modalOverlay.style.display = 'none';
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
+        // TASK TRACKER LOGIC
+        function addTask() {
+            const name = document.getElementById('task-name').value;
+            const conf = document.getElementById('task-conf').value;
+            const list = document.getElementById('task-list');
 
-        function toggleTimer() {
-            const btn = document.getElementById('startBtn');
-            const display = document.getElementById('timerDisplay');
+            if (name === "") return;
+
+            const item = document.createElement('div');
+            item.className = `task-item ${conf}`;
+            item.innerHTML = `
+                <span>${name}</span>
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:white; cursor:pointer; opacity:0.5;">✕</button>
+            `;
             
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                btn.innerText = "Resume";
-            } else {
-                btn.innerText = "Pause";
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    let mins = Math.floor(timeLeft / 60);
-                    let secs = timeLeft % 60;
-                    display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        alert("Session complete! Time for a break.");
-                    }
-                }, 1000);
-            }
+            list.prepend(item);
+            document.getElementById('task-name').value = "";
         }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            timeLeft = 25 * 60;
-            document.getElementById('timerDisplay').innerText = "25:00";
-            document.getElementById('startBtn').innerText = "Start";
-        }
-
-        window.onclick = (e) => { if(e.target == modalOverlay) closeModal(); }
     </script>
 </body>
 </html>
