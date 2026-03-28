@@ -3,193 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite GCSE/A-Level Study Space</title>
+    <title>Pro GCSE Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #c3a6ff;
             --secondary: #ff7eb9;
-            --bg-dark: #0f172a;
+            --success: #00ff88;
+            --warning: #ffcc00;
+            --danger: #ff4d4d;
             --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             padding: 20px;
+            min-height: 100vh;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 300px 1fr 300px;
             gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        @media (max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        /* Glass Panel Styling */
         .panel {
             background: var(--glass);
             backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        h1, h2 { margin-bottom: 20px; color: var(--primary); text-align: center; }
+        h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
 
-        /* Configurator */
-        .config-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
-        select, input {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
+        /* Subject Picker */
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: none;
             outline: none;
         }
+        select, input { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-add { background: var(--primary); color: #1e1b4b; font-weight: 600; cursor: pointer; }
 
-        /* Grade Predictor */
-        .predictor-box { text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 15px; }
-        .grade-display { font-size: 3rem; font-weight: 700; color: var(--secondary); margin: 10px 0; }
-
-        /* Task List */
-        .task-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .task-input-group input { flex: 1; }
-        .btn {
-            background: var(--primary);
-            border: none;
-            color: #1e1b4b;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(195, 166, 255, 0.4); }
-
-        .task-item {
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 10px;
+        .subject-tag {
+            background: rgba(195, 166, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid gray;
+            font-size: 0.9rem;
         }
-        .conf-low { border-left-color: #ff4d4d; }
-        .conf-mid { border-left-color: #ffcc00; }
-        .conf-high { border-left-color: #00ff88; }
 
+        /* Chart Area */
+        .chart-container { height: 200px; position: relative; }
+
+        /* Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+            font-size: 0.7rem;
+        }
+        .day { padding: 5px; background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .today { background: var(--secondary); color: white; }
+
+        /* Task List */
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        .status-not { background: var(--danger); }
+        .status-progress { background: var(--warning); }
+        .status-done { background: var(--success); }
+
+        .task-card {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
 
-    <h1 style="font-size: 2.5rem; margin-bottom: 40px;">Elite Study Space 🚀</h1>
+    <header style="text-align: center; margin-bottom: 30px;">
+        <h1 style="letter-spacing: 2px;">STUDY OS // GCSE EDITION</h1>
+        <p style="opacity: 0.6;">Your Exam Board-specific Revision Hub</p>
+    </header>
 
-    <div class="container">
+    <div class="dashboard-grid">
         
         <div class="panel">
-            <h2>Exam Board Config</h2>
-            <div class="config-row">
-                <span>Maths</span>
-                <select id="board-maths">
-                    <option value="edexcel">Edexcel</option>
-                    <option value="aqa">AQA</option>
-                </select>
-            </div>
-            <div class="config-row">
-                <span>English Lit</span>
-                <select id="board-english">
-                    <option value="aqa">AQA</option>
-                    <option value="edexcel">Edexcel</option>
-                </select>
-            </div>
-
-            <hr style="margin: 20px 0; opacity: 0.2;">
-
-            <h2>Grade Predictor</h2>
-            <div class="predictor-box">
-                <p>Enter Mock Score (%)</p>
-                <input type="number" id="mock-score" placeholder="e.g. 75" style="width: 80px; text-align: center;">
-                <button class="btn" onclick="calculateGrade()" style="margin-left: 10px;">Predict</button>
-                <div class="grade-display" id="grade-result">-</div>
-                <p id="grade-message">Enter a score to see your predicted GCSE grade.</p>
-            </div>
+            <h2>📚 My Subjects</h2>
+            <select id="subject-main">
+                <option value="">Choose Subject...</option>
+                <option value="Maths">Maths</option>
+                <option value="English Lit">English Lit</option>
+                <option value="English Lang">English Lang</option>
+                <option value="Biology">Biology</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Physics">Physics</option>
+                <option value="History">History</option>
+                <option value="Geography">Geography</option>
+                <option value="Computer Science">Computer Science</option>
+            </select>
+            <select id="board-select">
+                <option value="AQA">AQA</option>
+                <option value="Edexcel">Edexcel</option>
+                <option value="OCR">OCR</option>
+                <option value="WJEC">WJEC</option>
+            </select>
+            <button class="btn-add" onclick="addSubject()">Enroll Subject</button>
+            <div id="subject-list" style="margin-top: 20px;"></div>
         </div>
 
         <div class="panel">
-            <h2>Subject Topic Tracker</h2>
-            <div class="task-input-group">
-                <input type="text" id="task-name" placeholder="Topic (e.g. Algebra)">
-                <select id="task-conf">
-                    <option value="conf-low">Low Confidence</option>
-                    <option value="conf-mid">Medium</option>
-                    <option value="conf-high">High</option>
+            <h2>📝 Smart Topic Tracker</h2>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="topic-name" placeholder="Enter topic (e.g. Trig)">
+                <select id="topic-status" style="width: 150px;">
+                    <option value="0">Not Started</option>
+                    <option value="1">In Progress</option>
+                    <option value="2">Completed</option>
                 </select>
-                <button class="btn" onclick="addTask()">Add</button>
+                <button class="btn-add" onclick="addTopic()" style="width: 80px;">Add</button>
             </div>
-            <div id="task-list">
-                </div>
+            <div id="topic-display"></div>
+        </div>
+
+        <div class="panel">
+            <h2>📊 Progress Overview</h2>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+            
+            <hr style="margin: 20px 0; opacity: 0.1;">
+            
+            <h2>📅 Study Calendar</h2>
+            <div class="calendar-grid" id="calendar"></div>
         </div>
 
     </div>
 
     <script>
-        // GRADE PREDICTION LOGIC (Based on roughly 2025 Edexcel/AQA boundaries)
-        function calculateGrade() {
-            const score = parseInt(document.getElementById('mock-score').value);
-            const board = document.getElementById('board-maths').value;
-            const resultDiv = document.getElementById('grade-result');
-            const messageDiv = document.getElementById('grade-message');
+        // --- DATA STATE ---
+        let stats = [0, 0, 0]; // Not Started, In Progress, Done
+        let myChart;
 
-            if (isNaN(score)) return;
+        // --- CHART INITIALIZATION ---
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Not Started', 'In Progress', 'Done'],
+                datasets: [{
+                    data: [1, 1, 1],
+                    backgroundColor: ['#ff4d4d', '#ffcc00', '#00ff88'],
+                    borderWidth: 0
+                }]
+            },
+            options: { cutout: '80%', plugins: { legend: { display: false } } }
+        });
 
-            let grade = "U";
-            let nextGrade = "";
-
-            // Simple logic: Edexcel Maths Higher typically needs ~80% for a 9
-            if (score >= 80) grade = "9";
-            else if (score >= 70) grade = "8";
-            else if (score >= 60) grade = "7";
-            else if (score >= 50) grade = "6";
-            else if (score >= 40) grade = "5";
-            else grade = "4 or below";
-
-            resultDiv.innerText = grade;
-            messageDiv.innerText = `Based on ${board.toUpperCase()} typical boundaries, you're on track for a ${grade}!`;
+        function updateChart() {
+            myChart.data.datasets[0].data = stats;
+            myChart.update();
         }
 
-        // TASK TRACKER LOGIC
-        function addTask() {
-            const name = document.getElementById('task-name').value;
-            const conf = document.getElementById('task-conf').value;
-            const list = document.getElementById('task-list');
+        // --- SUBJECT SYSTEM ---
+        function addSubject() {
+            const sub = document.getElementById('subject-main').value;
+            const board = document.getElementById('board-select').value;
+            if(!sub) return;
 
-            if (name === "") return;
-
-            const item = document.createElement('div');
-            item.className = `task-item ${conf}`;
-            item.innerHTML = `
-                <span>${name}</span>
-                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:white; cursor:pointer; opacity:0.5;">✕</button>
-            `;
-            
-            list.prepend(item);
-            document.getElementById('task-name').value = "";
+            const div = document.createElement('div');
+            div.className = 'subject-tag';
+            div.innerHTML = `<span><b>${sub}</b> (${board})</span> <span onclick="this.parentElement.remove()" style="cursor:pointer">✕</span>`;
+            document.getElementById('subject-list').appendChild(div);
         }
+
+        // --- TOPIC SYSTEM ---
+        function addTopic() {
+            const name = document.getElementById('topic-name').value;
+            const statusIdx = parseInt(document.getElementById('topic-status').value);
+            if(!name) return;
+
+            stats[statusIdx]++;
+            updateChart();
+
+            const statusClass = statusIdx == 0 ? 'status-not' : (statusIdx == 1 ? 'status-progress' : 'status-done');
+            const statusText = statusIdx == 0 ? 'Not Started' : (statusIdx == 1 ? 'In Progress' : 'Completed');
+
+            const div = document.createElement('div');
+            div.className = 'task-card';
+            div.innerHTML = `<span class="status-dot ${statusClass}"></span><b>${name}</b><br><small style="opacity:0.6">${statusText}</small>`;
+            document.getElementById('topic-display').prepend(div);
+            document.getElementById('topic-name').value = "";
+        }
+
+        // --- SIMPLE CALENDAR GENERATOR ---
+        function genCal() {
+            const cal = document.getElementById('calendar');
+            for(let i=1; i<=31; i++) {
+                const day = document.createElement('div');
+                day.className = i === new Date().getDate() ? 'day today' : 'day';
+                day.innerText = i;
+                cal.appendChild(day);
+            }
+        }
+        genCal();
     </script>
 </body>
 </html>
