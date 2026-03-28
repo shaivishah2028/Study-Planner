@@ -3,33 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study OS | Elite GCSE 9-1 Edition</title>
+    <title>Study OS | Professional 9-1 Platform</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --primary: #c3a6ff;
-            --secondary: #ff7eb9;
-            --accent: #00f2fe;
-            --bg: #050507;
-            --sidebar-bg: #0d0d0f;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.4);
-            --success: #00ff88;
-            --warning: #ffcc00;
-            --danger: #ff4d4d;
+            --primary: #4F46E5; /* Electric Blue */
+            --secondary: #EC4899; /* Vibrant Pink */
+            --accent: #06B6D4; /* Bright Cyan */
+            --bg: #F9FAFB;
+            --sidebar-bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border: #E5E7EB;
+            --text-main: #111827;
+            --text-dim: #6B7280;
+            --success: #10B981;
+            --danger: #EF4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-family: 'Inter', sans-serif; 
             background: var(--bg); 
-            color: var(--text); 
+            color: var(--text-main); 
             height: 100vh; 
             overflow: hidden; 
             display: flex;
@@ -37,517 +35,508 @@
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 280px;
+            width: 260px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
-            padding: 30px 20px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             z-index: 100;
         }
 
         .brand {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .menu-label {
-            font-size: 0.65rem;
+            color: var(--primary);
+            margin-bottom: 50px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-dim);
-            margin: 25px 0 10px 10px;
         }
 
         .nav-link {
-            padding: 12px 15px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 12px;
             color: var(--text-dim);
             font-weight: 600;
             transition: 0.2s;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--card);
+            background: #F3F4F6;
             color: var(--primary);
-            border: 1px solid var(--border);
+            border-color: var(--border);
         }
 
         /* --- CONTENT AREA --- */
         .viewport {
             flex: 1;
             overflow-y: auto;
-            padding: 40px 60px;
+            padding: 60px;
             scroll-behavior: smooth;
         }
 
-        .view { display: none; animation: fadeIn 0.4s ease-out; }
+        .view { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- CARDS & PANELS --- */
+        /* --- COMPONENTS --- */
         .glass-panel {
-            background: var(--card);
-            backdrop-filter: blur(20px);
+            background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 16px;
             padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .stats-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
             margin-bottom: 40px;
         }
 
-        .stat-card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 22px;
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
             border: 1px solid var(--border);
-            text-align: center;
             transition: 0.3s;
         }
 
-        .stat-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-
-        /* --- FORM ELEMENTS --- */
-        .input-group { margin-bottom: 20px; }
-        input, select, textarea {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 14px;
-            border-radius: 12px;
-            margin-top: 8px;
-        }
+        .card:hover { border-color: var(--primary); transform: translateY(-2px); }
 
         .btn {
             background: var(--primary);
-            color: #000;
-            padding: 14px 28px;
-            border-radius: 12px;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            transition: 0.2s;
+            font-size: 0.85rem;
         }
 
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(195, 166, 255, 0.4); }
+        .btn:hover { filter: brightness(1.1); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
 
-        /* --- POPUP --- */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-dim);
+            border: 2px dashed var(--border);
+            border-radius: 16px;
         }
 
-        .modal {
-            background: #111;
-            width: 90%;
-            max-width: 550px;
-            padding: 40px;
-            border-radius: 30px;
+        /* --- FORMS --- */
+        label { font-size: 0.75rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        input, select {
+            width: 100%;
+            padding: 12px;
             border: 1px solid var(--border);
-            position: relative;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: inherit;
         }
 
-        /* --- TASK LIST (SR) --- */
-        .sr-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.02);
-            padding: 15px 20px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid var(--text-dim);
-        }
-        .sr-low { border-left-color: var(--danger); }
-        .sr-mid { border-left-color: var(--warning); }
-        .sr-high { border-left-color: var(--success); }
+        /* --- TABLE STYLE --- */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
+        .data-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+        .badge-red { background: #FEE2E2; color: #B91C1C; }
+        .badge-amber { background: #FEF3C7; color: #92400E; }
+        .badge-green { background: #D1FAE5; color: #065F46; }
 
     </style>
 </head>
 <body>
 
-    <nav class="sidebar">
-        <div class="brand">STUDY OS 9-1</div>
+    <aside class="sidebar">
+        <div class="brand">Study OS</div>
         
-        <div class="menu-label">Main Dashboard</div>
-        <div class="nav-link active" onclick="switchView('home')">🏠 Home Center</div>
-        <div class="nav-link" onclick="switchView('planner')">📅 9-1 Planner</div>
-        <div class="nav-link" onclick="switchView('analytics')">📊 Grade Predictor</div>
-        
-        <div class="menu-label">Knowledge Base</div>
-        <div class="nav-link" onclick="switchView('syllabus')">📖 Course Content</div>
-        <div class="nav-link" onclick="switchView('resources')">📂 Resource Vault</div>
-        <div class="nav-link" onclick="switchView('notes')">📝 Revision Notes</div>
-        
-        <div class="menu-label">Study Tools</div>
-        <div class="nav-link" onclick="switchView('timer')">⏱️ Deep Work</div>
-        <div class="nav-link" onclick="openModal('enrollModal')">➕ Enroll Subject</div>
+        <div class="nav-link active" onclick="showView('home')">Overview</div>
+        <div class="nav-link" onclick="showView('planner')">Curriculum Planner</div>
+        <div class="nav-link" onclick="showView('predictor')">Grade Predictor</div>
+        <div class="nav-link" onclick="showView('subjects')">Subjects</div>
+        <div class="nav-link" onclick="showView('timer')">Focus Timer</div>
 
-        <div style="margin-top: auto; padding: 10px; font-size: 0.7rem; color: var(--text-dim);">
-            Current Level: <span style="color:var(--primary)">GCSE Year 11</span><br>
-            System Status: <span style="color:var(--success)">Optimized</span>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
+            <button class="btn" style="width: 100%; background: #F3F4F6; color: #111827;" onclick="resetAllData()">Clear System</button>
         </div>
-    </nav>
+    </aside>
 
     <main class="viewport">
         
         <section id="home" class="view active">
-            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Focus Mode: <span id="user-display">On</span></h1>
-            <p style="color: var(--text-dim); margin-bottom: 40px;">Your personalized 9-1 GCSE progress report.</p>
+            <h1 style="margin-bottom: 10px;">Academic Performance</h1>
+            <p style="color: var(--text-dim); margin-bottom: 40px;">Live analytics based on your current input.</p>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 style="color: var(--primary)" id="avg-grade">7.2</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.6;">Current Avg Grade</p>
+            <div class="grid" id="stats-grid">
+                <div class="card">
+                    <label>Active Subjects</label>
+                    <h2 id="stat-sub-count">0</h2>
                 </div>
-                <div class="stat-card">
-                    <h3 id="topics-mastered">0</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.6;">Topics Mastered</p>
+                <div class="card">
+                    <label>Mastery Level</label>
+                    <h2 id="stat-mastery">0%</h2>
                 </div>
-                <div class="stat-card">
-                    <h3 style="color: var(--secondary)">18</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.6;">Study Streak (Days)</p>
+                <div class="card">
+                    <label>Revision Priority</label>
+                    <h2 id="stat-priority">None</h2>
                 </div>
             </div>
 
-            <div class="glass-panel">
-                <h2 style="margin-bottom: 20px;">Urgent Revision (Low Confidence) ⚠️</h2>
-                <div id="urgent-sr-list">
-                    <p style="opacity: 0.4;">Add topics to your planner to see urgent revision items here.</p>
-                </div>
+            <div class="glass-panel" id="home-chart-container">
+                <label>Syllabus Progression</label>
+                <div id="no-data-msg" class="empty-state">No study data detected. Please add subjects to view analytics.</div>
+                <canvas id="homeChart" style="display:none; max-height: 300px;"></canvas>
             </div>
         </section>
 
         <section id="planner" class="view">
-            <h1>Dynamic 9-1 Planner</h1>
-            <div class="glass-panel" style="margin-top: 20px;">
+            <h1>Curriculum Planner</h1>
+            <div class="glass-panel" style="margin-top: 30px;">
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: flex-end;">
-                    <div class="input-group">
-                        <label class="menu-label">Topic / Concept</label>
-                        <input type="text" id="planner-topic" placeholder="e.g. Trig Identities">
+                    <div>
+                        <label>Topic Title</label>
+                        <input type="text" id="topic-name" placeholder="e.g. Organic Chemistry">
                     </div>
-                    <div class="input-group">
-                        <label class="menu-label">Subject</label>
-                        <select id="planner-subject">
-                            <option>Maths</option>
-                            <option>English Lit</option>
-                            <option>Biology</option>
-                            <option>Chemistry</option>
-                            <option>Physics</option>
-                            <option>History</option>
-                            <option>Computer Science</option>
+                    <div>
+                        <label>Target Subject</label>
+                        <select id="topic-subject">
+                            <option value="">Select Subject...</option>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <label class="menu-label">Confidence</label>
-                        <select id="planner-conf">
-                            <option value="sr-low">1-3: Critical</option>
-                            <option value="sr-mid">4-6: Working</option>
-                            <option value="sr-high">7-9: Mastered</option>
-                        </select>
+                    <div>
+                        <label>Confidence (1-9)</label>
+                        <input type="number" id="topic-conf" min="1" max="9" value="5">
                     </div>
-                    <button class="btn" style="margin-bottom: 20px;" onclick="addPlannerItem()">Add Topic</button>
+                    <button class="btn" style="margin-bottom: 20px;" onclick="addTopic()">Update Planner</button>
                 </div>
             </div>
-            <div id="full-planner-list"></div>
-        </section>
 
-        <section id="analytics" class="view">
-            <h1>Grade Predictor 📈</h1>
-            <div class="glass-panel" style="margin-top: 20px; text-align: center;">
-                <p>Based on your quiz scores and topic mastery across the 9-1 system.</p>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--primary); margin: 20px 0;">Grade <span id="pred-val">7</span></div>
-                <div id="grade-breakdown" style="max-width: 400px; margin: 0 auto; opacity: 0.7;">
-                    "You are performing at a 'Strong Pass' level. Increase Maths score by 8% to hit Grade 8."
-                </div>
-                <br>
-                <canvas id="gradeChart" height="150"></canvas>
-            </div>
-        </section>
-
-        <section id="syllabus" class="view">
-            <h1>Course Content Hub</h1>
-            <div class="stats-grid" style="margin-top: 20px;">
-                <div class="stat-card">
-                    <h4>Biology (9-1)</h4>
-                    <small>AQA Syllabus Sync</small>
-                </div>
-                <div class="stat-card">
-                    <h4>Maths (9-1)</h4>
-                    <small>Edexcel Syllabus Sync</small>
-                </div>
+            <div class="glass-panel">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Topic</th>
+                            <th>Subject</th>
+                            <th>Confidence</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planner-table-body"></tbody>
+                </table>
             </div>
         </section>
 
-        <section id="notes" class="view">
-            <h1>Revision Notes</h1>
-            <div class="glass-panel" style="margin-top: 20px;">
-                <input type="text" id="note-title" placeholder="Note Title (e.g. Macbeth Quotes)">
-                <textarea id="note-content" placeholder="Type your core revision notes here..." style="height: 200px;"></textarea>
-                <br><br>
-                <button class="btn" onclick="saveNote()">Save Note</button>
+        <section id="predictor" class="view">
+            <h1>9-1 Grade Predictor</h1>
+            <div class="glass-panel" style="margin-top: 30px;">
+                <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+                    <label>Select Subject</label>
+                    <select id="pred-sub-select" onchange="updatePredictorUI()"></select>
+                    
+                    <label>Enter Score Percentage</label>
+                    <input type="number" id="pred-score" placeholder="e.g. 75" oninput="calculateSpecificGrade()">
+                    
+                    <div style="margin: 40px 0;">
+                        <label>Predicted Grade</label>
+                        <div id="pred-output" style="font-size: 6rem; font-weight: 800; color: var(--primary);">-</div>
+                    </div>
+                    <p id="pred-feedback" style="color: var(--text-dim); font-size: 0.9rem;"></p>
+                </div>
             </div>
-            <div id="notes-grid" class="stats-grid"></div>
+        </section>
+
+        <section id="subjects" class="view">
+            <h1>Subject Enrollment</h1>
+            <div class="glass-panel" style="margin-top: 30px;">
+                <label>Subject Name</label>
+                <input type="text" id="new-sub-name" placeholder="e.g. Maths (Higher)">
+                <label>Exam Board</label>
+                <select id="new-sub-board">
+                    <option value="AQA">AQA</option>
+                    <option value="Edexcel">Edexcel</option>
+                    <option value="OCR">OCR</option>
+                    <option value="WJEC">WJEC</option>
+                </select>
+                <button class="btn" onclick="addSubject()">Enroll Subject</button>
+            </div>
+            <div class="grid" id="subjects-grid"></div>
         </section>
 
         <section id="timer" class="view">
-            <div class="glass-panel" style="max-width: 500px; margin: 50px auto; text-align: center;">
-                <h2>Deep Work Timer</h2>
-                <div id="clock-display" style="font-size: 5rem; font-weight: 800; margin: 20px 0;">25:00</div>
-                <button class="btn" id="timer-toggle" onclick="toggleClock()">Start Session</button>
-                <button class="btn" style="background: rgba(255,255,255,0.05); color: white;" onclick="resetClock()">Reset</button>
+            <h1>Deep Work Session</h1>
+            <div class="glass-panel" style="max-width: 500px; margin: 60px auto; text-align: center;">
+                <div id="timer-display" style="font-size: 6rem; font-weight: 800; margin-bottom: 30px;">25:00</div>
+                <button class="btn" id="timer-btn" onclick="toggleTimer()">Begin Session</button>
+                <button class="btn" style="background: transparent; color: var(--text-dim); border: 1px solid var(--border); margin-left: 10px;" onclick="resetTimer()">Reset</button>
             </div>
         </section>
 
     </main>
 
-    <div class="overlay" id="enrollModal">
-        <div class="modal">
-            <span style="position:absolute; top:20px; right:25px; cursor:pointer;" onclick="closeModal('enrollModal')">✕</span>
-            <h2>Enroll Subject</h2>
-            <br>
-            <label class="menu-label">Subject Name</label>
-            <select id="enroll-sub">
-                <option>Biology (Triple)</option>
-                <option>Chemistry (Triple)</option>
-                <option>Physics (Triple)</option>
-                <option>English Language</option>
-                <option>English Literature</option>
-                <option>Maths (Higher)</option>
-                <option>History</option>
-                <option>Geography</option>
-                <option>Psychology</option>
-                <option>Sociology</option>
-                <option>Spanish</option>
-                <option>French</option>
-                <option>Business Studies</option>
-                <option>Economics</option>
-                <option>Art & Design</option>
-                <option>Music</option>
-                <option>Drama</option>
-                <option>Religious Studies</option>
-                <option>PE</option>
-            </select>
-            <br><br>
-            <label class="menu-label">Exam Board</label>
-            <select id="enroll-board">
-                <option>AQA</option>
-                <option>Edexcel</option>
-                <option>OCR</option>
-                <option>Eduqas</option>
-                <option>WJEC</option>
-            </select>
-            <br><br>
-            <button class="btn" style="width: 100%;" onclick="confirmEnroll()">Enroll Subject</button>
-        </div>
-    </div>
-
     <script>
-        // --- DATA STATE ---
-        let appData = {
-            planner: [],
-            notes: [],
-            timerActive: false,
-            timeLeft: 1500,
-            timerInterval: null
+        // --- DATA SYSTEM ---
+        let appData = JSON.parse(localStorage.getItem('study_os_data')) || {
+            subjects: [],
+            topics: [],
+            timer: 1500
         };
 
+        const boundaries = {
+            "AQA": [85, 75, 65, 55, 45, 35, 25, 15, 5],
+            "Edexcel": [82, 72, 62, 52, 42, 32, 22, 12, 4],
+            "OCR": [84, 74, 64, 54, 44, 34, 24, 14, 4],
+            "WJEC": [80, 70, 60, 50, 40, 30, 20, 10, 5]
+        };
+
+        function saveData() {
+            localStorage.setItem('study_os_data', JSON.stringify(appData));
+            updateUI();
+        }
+
         // --- NAVIGATION ---
-        function switchView(viewId) {
+        function showView(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            const navs = document.querySelectorAll('.nav-link');
-            navs.forEach(nav => {
-                if(nav.innerText.toLowerCase().includes(viewId.replace('home', 'center'))) {
-                    nav.classList.add('active');
-                }
-            });
-        }
-
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // --- PLANNER LOGIC ---
-        function addPlannerItem() {
-            const topic = document.getElementById('planner-topic').value;
-            const subject = document.getElementById('planner-subject').value;
-            const conf = document.getElementById('planner-conf').value;
-
-            if(!topic) return;
-
-            const item = { id: Date.now(), topic, subject, conf };
-            appData.planner.push(item);
             
-            renderPlanner();
-            confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
-            document.getElementById('planner-topic').value = "";
+            const activeNav = Array.from(document.querySelectorAll('.nav-link')).find(n => n.innerText.toLowerCase().includes(viewId.replace('home', 'overview')));
+            if(activeNav) activeNav.classList.add('active');
         }
 
-        function renderPlanner() {
-            const fullList = document.getElementById('full-planner-list');
-            const urgentList = document.getElementById('urgent-sr-list');
-            fullList.innerHTML = "";
-            urgentList.innerHTML = "";
+        // --- SUBJECTS ---
+        function addSubject() {
+            const name = document.getElementById('new-sub-name').value;
+            const board = document.getElementById('new-sub-board').value;
+            if(!name) return;
 
-            // Sort so critical is first (Spaced Repetition Logic)
-            const sorted = [...appData.planner].sort((a, b) => {
-                const weights = {"sr-low": 1, "sr-mid": 2, "sr-high": 3};
-                return weights[a.conf] - weights[b.conf];
+            appData.subjects.push({ name, board, id: Date.now() });
+            document.getElementById('new-sub-name').value = '';
+            saveData();
+        }
+
+        function deleteSubject(id) {
+            appData.subjects = appData.subjects.filter(s => s.id !== id);
+            appData.topics = appData.topics.filter(t => t.subjectId !== id);
+            saveData();
+        }
+
+        // --- TOPICS ---
+        function addTopic() {
+            const name = document.getElementById('topic-name').value;
+            const subId = document.getElementById('topic-subject').value;
+            const conf = document.getElementById('topic-conf').value;
+
+            if(!name || !subId) return;
+
+            appData.topics.push({
+                id: Date.now(),
+                name,
+                subjectId: parseInt(subId),
+                confidence: parseInt(conf)
             });
 
-            sorted.forEach(item => {
-                const el = document.createElement('div');
-                el.className = `sr-item ${item.conf}`;
-                el.innerHTML = `
-                    <div>
-                        <strong>${item.topic}</strong><br>
-                        <small style="opacity:0.5">${item.subject}</small>
-                    </div>
-                    <button onclick="removeItem(${item.id})" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
-                `;
-                fullList.appendChild(el);
-
-                if(item.conf === 'sr-low') {
-                    urgentList.appendChild(el.cloneNode(true));
-                }
-            });
-
-            if(urgentList.innerHTML === "") {
-                urgentList.innerHTML = `<p style="opacity:0.4;">Knowledge base is stable. No critical topics detected.</p>`;
-            }
-            
-            document.getElementById('topics-mastered').innerText = appData.planner.filter(i => i.conf === 'sr-high').length;
+            document.getElementById('topic-name').value = '';
+            saveData();
         }
 
-        function removeItem(id) {
-            appData.planner = appData.planner.filter(i => i.id !== id);
-            renderPlanner();
-        }
+        // --- GRADE CALCULATION ---
+        function calculateSpecificGrade() {
+            const score = parseInt(document.getElementById('pred-score').value);
+            const subId = document.getElementById('pred-sub-select').value;
+            const output = document.getElementById('pred-output');
+            const feedback = document.getElementById('pred-feedback');
 
-        // --- ENROLLMENT ---
-        function confirmEnroll() {
-            const sub = document.getElementById('enroll-sub').value;
-            const board = document.getElementById('enroll-board').value;
-            closeModal('enrollModal');
-            confetti({ particleCount: 150, spread: 100 });
-            // Add subject card logic here
-        }
-
-        // --- NOTES LOGIC ---
-        function saveNote() {
-            const title = document.getElementById('note-title').value;
-            const content = document.getElementById('note-content').value;
-            if(!title) return;
-
-            const note = { title, content, id: Date.now() };
-            appData.notes.push(note);
-            renderNotes();
-            
-            document.getElementById('note-title').value = "";
-            document.getElementById('note-content').value = "";
-        }
-
-        function renderNotes() {
-            const grid = document.getElementById('notes-grid');
-            grid.innerHTML = "";
-            appData.notes.forEach(note => {
-                grid.innerHTML += `
-                    <div class="stat-card" style="text-align: left;">
-                        <h4>${note.title}</h4>
-                        <p style="font-size:0.8rem; opacity:0.6; height:60px; overflow:hidden;">${note.content}</p>
-                    </div>
-                `;
-            });
-        }
-
-        // --- TIMER LOGIC ---
-        function toggleClock() {
-            if(appData.timerActive) {
-                clearInterval(appData.timerInterval);
-                document.getElementById('timer-toggle').innerText = "Resume Session";
-            } else {
-                appData.timerInterval = setInterval(updateClock, 1000);
-                document.getElementById('timer-toggle').innerText = "Pause Session";
-            }
-            appData.timerActive = !appData.timerActive;
-        }
-
-        function updateClock() {
-            if(appData.timeLeft <= 0) {
-                clearInterval(appData.timerInterval);
-                alert("Session Complete! Take a break.");
-                resetClock();
+            if(isNaN(score) || !subId) {
+                output.innerText = "-";
                 return;
             }
-            appData.timeLeft--;
-            const m = Math.floor(appData.timeLeft / 60);
-            const s = appData.timeLeft % 60;
-            document.getElementById('clock-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+            const subject = appData.subjects.find(s => s.id == subId);
+            const boardLimit = boundaries[subject.board];
+            
+            let grade = 1;
+            for(let i = 0; i < boardLimit.length; i++) {
+                if(score >= boardLimit[i]) {
+                    grade = 9 - i;
+                    break;
+                }
+            }
+
+            output.innerText = grade;
+            const nextBoundary = boardLimit[9 - grade - 1];
+            if(nextBoundary) {
+                feedback.innerText = `You are ${nextBoundary - score}% away from a Grade ${grade + 1}.`;
+            } else {
+                feedback.innerText = "You are currently achieving the highest grade.";
+            }
         }
 
-        function resetClock() {
-            clearInterval(appData.timerInterval);
-            appData.timeLeft = 1500;
-            appData.timerActive = false;
-            document.getElementById('clock-display').innerText = "25:00";
-            document.getElementById('timer-toggle').innerText = "Start Session";
+        // --- INTERFACE UPDATES ---
+        let myChart;
+        function updateUI() {
+            // Update Subject Dropdowns
+            const subSelects = [document.getElementById('topic-subject'), document.getElementById('pred-sub-select')];
+            subSelects.forEach(sel => {
+                const currentVal = sel.value;
+                sel.innerHTML = '<option value="">Select Subject...</option>';
+                appData.subjects.forEach(s => {
+                    sel.innerHTML += `<option value="${s.id}">${s.name} (${s.board})</option>`;
+                });
+                sel.value = currentVal;
+            });
+
+            // Update Subject Grid
+            const grid = document.getElementById('subjects-grid');
+            grid.innerHTML = '';
+            appData.subjects.forEach(s => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <label>${s.board}</label>
+                        <h3>${s.name}</h3>
+                        <button onclick="deleteSubject(${s.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; margin-top:10px; font-size:0.7rem;">Remove</button>
+                    </div>
+                `;
+            });
+
+            // Update Planner Table
+            const tbody = document.getElementById('planner-table-body');
+            tbody.innerHTML = '';
+            appData.topics.forEach(t => {
+                const sub = appData.subjects.find(s => s.id == t.subjectId);
+                const badgeClass = t.confidence < 4 ? 'badge-red' : (t.confidence < 7 ? 'badge-amber' : 'badge-green');
+                tbody.innerHTML += `
+                    <tr>
+                        <td><div class="badge ${badgeClass}">${t.confidence < 4 ? 'Urgent' : (t.confidence < 7 ? 'Progressing' : 'Mastered')}</div></td>
+                        <td>${t.name}</td>
+                        <td>${sub ? sub.name : 'Unknown'}</td>
+                        <td>Grade ${t.confidence} equivalent</td>
+                        <td><button onclick="deleteTopic(${t.id})" style="border:none; background:none; cursor:pointer;">Remove</button></td>
+                    </tr>
+                `;
+            });
+
+            // Update Stats
+            document.getElementById('stat-sub-count').innerText = appData.subjects.length;
+            const avgConf = appData.topics.length ? (appData.topics.reduce((a, b) => a + b.confidence, 0) / appData.topics.length).toFixed(1) : 0;
+            document.getElementById('stat-mastery').innerText = ((avgConf / 9) * 100).toFixed(0) + '%';
+            
+            const criticals = appData.topics.filter(t => t.confidence < 4);
+            document.getElementById('stat-priority').innerText = criticals.length > 0 ? criticals[0].name : "None";
+
+            // Update Charts
+            const chartMsg = document.getElementById('no-data-msg');
+            const canvas = document.getElementById('homeChart');
+            if(appData.subjects.length > 0) {
+                chartMsg.style.display = 'none';
+                canvas.style.display = 'block';
+                renderChart();
+            } else {
+                chartMsg.style.display = 'block';
+                canvas.style.display = 'none';
+            }
         }
 
-        // --- CHARTING ---
-        window.onload = () => {
-            const ctx = document.getElementById('gradeChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
+        function deleteTopic(id) {
+            appData.topics = appData.topics.filter(t => t.id !== id);
+            saveData();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('homeChart').getContext('2d');
+            if(myChart) myChart.destroy();
+
+            const subNames = appData.subjects.map(s => s.name);
+            const masteryData = appData.subjects.map(s => {
+                const subTopics = appData.topics.filter(t => t.subjectId === s.id);
+                if(subTopics.length === 0) return 0;
+                return (subTopics.reduce((a,b) => a + b.confidence, 0) / subTopics.length).toFixed(1);
+            });
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    labels: subNames,
                     datasets: [{
-                        label: 'Mastery Progress',
-                        data: [4, 5.5, 6, 7.2],
-                        borderColor: '#c3a6ff',
-                        backgroundColor: 'rgba(195, 166, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
+                        label: 'Confidence Level (1-9)',
+                        data: masteryData,
+                        backgroundColor: '#4F46E5',
+                        borderRadius: 8
                     }]
                 },
                 options: {
                     plugins: { legend: { display: false } },
-                    scales: { y: { display: false }, x: { grid: { display: false } } }
+                    scales: { y: { beginAtZero: true, max: 9, grid: { display: false } }, x: { grid: { display: false } } }
                 }
             });
+        }
+
+        // --- TIMER ---
+        let timerInterval;
+        let isRunning = false;
+        function toggleTimer() {
+            const btn = document.getElementById('timer-btn');
+            if(isRunning) {
+                clearInterval(timerInterval);
+                btn.innerText = "Resume Session";
+            } else {
+                timerInterval = setInterval(() => {
+                    appData.timer--;
+                    updateTimerDisplay();
+                    if(appData.timer <= 0) {
+                        clearInterval(timerInterval);
+                        alert("Session complete!");
+                        resetTimer();
+                    }
+                }, 1000);
+                btn.innerText = "Pause Session";
+            }
+            isRunning = !isRunning;
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(appData.timer / 60);
+            const s = appData.timer % 60;
+            document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            appData.timer = 1500;
+            isRunning = false;
+            updateTimerDisplay();
+            document.getElementById('timer-btn').innerText = "Begin Session";
+        }
+
+        function resetAllData() {
+            if(confirm("Are you sure? This will delete all subjects and progress.")) {
+                appData = { subjects: [], topics: [], timer: 1500 };
+                saveData();
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            updateUI();
+            updateTimerDisplay();
         };
+
     </script>
 </body>
 </html>
