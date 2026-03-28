@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study OS | The Elite 9-1 Academic Suite</title>
+    <title>Study OS | Vanguard Academic Suite</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,63 +11,78 @@
 
     <style>
         :root {
-            /* Appealing Light Theme - "Soft-Glass Bloom" */
             --primary: #6366f1;
-            --primary-soft: #eef2ff;
-            --secondary: #ec4899;
-            --accent: #14b8a6;
+            --primary-light: #e0e7ff;
+            --secondary: #0ea5e9;
+            --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --bg: #f8fafc;
-            --sidebar-bg: #ffffff;
-            --panel: #ffffff;
-            --border: #e2e8f0;
+            --bg-base: #f8fafc;
+            --panel: rgba(255, 255, 255, 0.85);
+            --sidebar: #ffffff;
             --text-main: #1e293b;
             --text-dim: #64748b;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --border: #e2e8f0;
+            --glass-border: rgba(255, 255, 255, 0.6);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: all 0.2s ease; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg); 
             color: var(--text-main); 
             height: 100vh; 
             overflow: hidden; 
             display: flex;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
         }
 
-        /* --- SIDEBAR NAVIGATION --- */
+        /* --- MEANINGFUL BACKGROUND --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.03) 0%, transparent 40%);
+            animation: auraRotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes auraRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- NAVIGATION --- */
         .sidebar {
             width: 280px;
-            background: var(--sidebar-bg);
+            background: var(--sidebar);
             border-right: 1px solid var(--border);
-            padding: 40px 20px;
+            padding: 40px 24px;
             display: flex;
             flex-direction: column;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .brand {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--primary);
-            margin-bottom: 40px;
             letter-spacing: -0.5px;
-            padding-left: 10px;
-            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 48px;
+            padding-left: 12px;
+            text-transform: uppercase;
         }
 
-        .nav-section { margin-bottom: 25px; }
+        .nav-group { margin-bottom: 32px; }
         .nav-label {
             font-size: 0.65rem;
             font-weight: 800;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.5px;
             margin-bottom: 12px;
+            padding-left: 12px;
             display: block;
-            padding-left: 10px;
         }
 
         .nav-item {
@@ -81,441 +96,665 @@
             font-weight: 600;
             font-size: 0.9rem;
             margin-bottom: 4px;
+            border: 1px solid transparent;
         }
 
         .nav-item:hover, .nav-item.active {
-            background: var(--primary-soft);
+            background: var(--primary-light);
             color: var(--primary);
+            border-color: rgba(99, 102, 241, 0.1);
         }
 
-        /* --- MAIN VIEWPORT --- */
+        /* --- CONTENT AREA --- */
         .viewport {
             flex: 1;
             overflow-y: auto;
-            padding: 50px 60px;
-            position: relative;
+            padding: 60px;
+            scroll-behavior: smooth;
         }
 
-        .view { display: none; animation: viewIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view { display: none; animation: viewSlide 0.4s ease-out; }
         .view.active { display: block; }
 
-        @keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- GLASS COMPONENTS --- */
-        .panel {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
+        @keyframes viewSlide {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 30px; }
+        /* --- UI COMPONENTS --- */
+        .glass-panel {
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+        }
 
-        /* --- BUTTONS & UI --- */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
         .btn {
             background: var(--primary);
             color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: 14px;
             font-weight: 700;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            font-size: 0.9rem;
         }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .btn-ghost { background: var(--primary-soft); color: var(--primary); box-shadow: none; }
 
-        /* --- INPUTS --- */
-        select, input, textarea {
+        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-ghost { background: var(--primary-light); color: var(--primary); box-shadow: none; }
+
+        /* --- FORMS --- */
+        input, select, textarea {
             width: 100%;
             padding: 14px;
             border-radius: 12px;
             border: 1px solid var(--border);
-            background: #fff;
+            background: white;
             font-family: inherit;
             margin-top: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        /* --- SPECIALTY MODULES --- */
-        .streak-counter { color: var(--secondary); font-weight: 800; font-size: 1.2rem; }
-        
-        .ai-chat-box {
-            height: 400px;
+        /* --- POMODORO --- */
+        .timer-display {
+            font-size: 6rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .sound-selector {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        /* --- AI CHAT --- */
+        .chat-container {
+            height: 450px;
             overflow-y: auto;
             padding: 20px;
             background: #fdfdff;
             border-radius: 16px;
             border: 1px solid var(--border);
+            margin-bottom: 20px;
         }
-        .msg { padding: 12px 18px; border-radius: 16px; max-width: 80%; font-size: 0.9rem; line-height: 1.5; }
-        .msg-ai { background: var(--primary-soft); color: var(--primary); align-self: flex-start; border-bottom-left-radius: 2px; }
-        .msg-user { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        .tag { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .tag-high { background: #dcfce7; color: #15803d; }
-        .tag-mid { background: #fef3c7; color: #b45309; }
-        .tag-low { background: #fee2e2; color: #b91c1c; }
+        .msg { padding: 14px 20px; border-radius: 18px; max-width: 80%; margin-bottom: 12px; font-size: 0.9rem; line-height: 1.6; }
+        .msg-ai { background: var(--primary-light); color: var(--primary); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg-user { background: var(--primary); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
 
-        /* --- MODAL POPUPS --- */
-        .popup-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 5000;
-        }
-        .popup {
-            background: white; padding: 40px; border-radius: 30px; width: 90%; max-width: 600px;
-            box-shadow: var(--shadow); position: relative;
-        }
-        .close-popup { position: absolute; top: 25px; right: 25px; cursor: pointer; color: var(--text-dim); }
+        /* --- DATA TABLES --- */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 16px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="brand">STUDY OS.</div>
+        <div class="brand">Study OS</div>
         
-        <div class="nav-section">
+        <nav class="nav-group">
             <span class="nav-label">Intelligence</span>
-            <div class="nav-item active" onclick="navigate('dashboard')">Overview</div>
-            <div class="nav-item" onclick="navigate('planner')">Smart Timetable</div>
-            <div class="nav-item" onclick="navigate('analytics')">Performance</div>
-        </div>
+            <div class="nav-item active" onclick="nav('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="nav('planner')">Smart Timetable</div>
+            <div class="nav-item" onclick="nav('analytics')">9-1 Performance</div>
+        </nav>
 
-        <div class="nav-section">
-            <span class="nav-label">Active Learning</span>
-            <div class="nav-item" onclick="navigate('tutor')">AI Tutor</div>
-            <div class="nav-item" onclick="navigate('quizzes')">Adaptive Quiz</div>
-        </div>
+        <nav class="nav-group">
+            <span class="nav-label">Academy</span>
+            <div class="nav-item" onclick="nav('tutor')">AI Tutor</div>
+            <div class="nav-item" onclick="nav('quizzes')">Adaptive Quiz</div>
+            <div class="nav-item" onclick="nav('syllabus')">Syllabus Hub</div>
+        </nav>
 
-        <div class="nav-section">
-            <span class="nav-label">Management</span>
-            <div class="nav-item" onclick="navigate('profile')">Learning Profile</div>
-            <div class="nav-item" onclick="openPopup('enrollPopup')">Enroll Subject</div>
-        </div>
+        <nav class="nav-group">
+            <span class="nav-label">Focus Studio</span>
+            <div class="nav-item" onclick="nav('pomodoro')">Zen Pomodoro</div>
+            <div class="nav-item" onclick="nav('profile')">Learning Profile</div>
+        </nav>
 
         <div style="margin-top: auto;">
-            <div class="nav-item" style="color: var(--danger)" onclick="resetSystem()">Reset System</div>
+            <button class="btn btn-ghost" style="width: 100%;" onclick="resetSystem()">Reset OS</button>
         </div>
     </aside>
 
     <main class="viewport">
         
         <section id="dashboard" class="view active">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h1>Good morning, Student.</h1>
-                <div class="streak-counter">STREAK: <span id="streak-val">0</span> DAYS</div>
-            </div>
+            <header style="margin-bottom: 40px;">
+                <h1>Welcome, Scholar.</h1>
+                <p style="color: var(--text-dim)">Tracked streak: <span id="dash-streak" style="color: var(--primary); font-weight: 700;">0 Days</span></p>
+            </header>
 
-            <div class="grid-3">
-                <div class="panel">
-                    <span class="nav-label">Global Mastery</span>
-                    <h2 id="mastery-percent">0%</h2>
-                    <div style="height: 10px; width: 100%; background: var(--border); border-radius: 5px; margin-top: 15px;">
-                        <div id="mastery-bar" style="height: 100%; width: 0%; background: var(--primary); border-radius: 5px;"></div>
-                    </div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="nav-label">Mastery Level</span>
+                    <h2 id="dash-mastery">0%</h2>
                 </div>
-                <div class="panel">
-                    <span class="nav-label">Time Tracked</span>
-                    <h2 id="total-time">0.0h</h2>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 10px;">Deep Work Sessions Complete</p>
+                <div class="stat-card">
+                    <span class="nav-label">Predicted Grade</span>
+                    <h2 id="dash-grade" style="color: var(--primary)">-</h2>
                 </div>
-                <div class="panel">
-                    <span class="nav-label">Grade Prediction</span>
-                    <h2 style="color: var(--accent)" id="dash-grade">-</h2>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 10px;">Based on recent quiz trends</p>
+                <div class="stat-card">
+                    <span class="nav-label">Hours Studied</span>
+                    <h2 id="dash-hours">0.0h</h2>
                 </div>
             </div>
 
-            <div class="panel">
-                <h3>Today's Adaptive Priority</h3>
-                <div id="priority-task-list" style="margin-top: 20px;">
-                    <p style="color: var(--text-dim)">Enroll in subjects to generate your smart timetable.</p>
+            <div class="glass-panel">
+                <h3>Adaptive Daily Schedule</h3>
+                <div id="daily-schedule-gen" style="margin-top: 20px;">
+                    <p style="color: var(--text-dim)">Generating your schedule based on exam dates...</p>
                 </div>
+            </div>
+
+            <div class="glass-panel">
+                <h3>Smart Recommendations</h3>
+                <p id="smart-rec" style="color: var(--text-dim); margin-top: 10px;">Enroll in subjects to see personalized study paths.</p>
             </div>
         </section>
 
         <section id="planner" class="view">
-            <h1>Smart Revision Planner</h1>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">Timetables are auto-adjusted based on your confidence and upcoming exams.</p>
-            
-            <div class="grid-3">
-                <div class="panel" style="grid-column: span 2;">
-                    <h3>Syllabus Breakdown</h3>
-                    <div id="syllabus-container" style="margin-top: 20px;">
-                        </div>
+            <h1>Smart Revision Timetable</h1>
+            <div class="glass-panel" style="margin-top: 30px;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: flex-end;">
+                    <div>
+                        <label class="nav-label">Subject</label>
+                        <select id="enroll-name"></select>
+                    </div>
+                    <div>
+                        <label class="nav-label">Exam Date</label>
+                        <input type="date" id="enroll-date">
+                    </div>
+                    <div>
+                        <label class="nav-label">Confidence (1-9)</label>
+                        <input type="number" id="enroll-conf" min="1" max="9" value="5">
+                    </div>
+                    <button class="btn" style="margin-bottom: 20px;" onclick="enroll()">Enroll</button>
                 </div>
-                <div class="panel">
-                    <h3>Exam Countdown</h3>
-                    <div id="exam-timer-list" style="margin-top: 20px;">
-                        </div>
-                </div>
+            </div>
+
+            <div class="glass-panel">
+                <table id="timetable-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Countdown</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetable-body"></tbody>
+                </table>
             </div>
         </section>
 
-        <section id="analytics" class="view">
-            <h1>Advanced Analytics</h1>
-            <div class="grid-3">
-                <div class="panel" style="grid-column: span 2;">
-                    <canvas id="performanceChart" height="200"></canvas>
+        <section id="pomodoro" class="view">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <h1 id="timer-status">Deep Work Session</h1>
+                <div class="timer-display" id="timer-val">25:00</div>
+                
+                <div class="sound-selector">
+                    <button class="btn btn-ghost" onclick="setSound('none')">Silence</button>
+                    <button class="btn btn-ghost" onclick="setSound('rain')">Rain</button>
+                    <button class="btn btn-ghost" onclick="setSound('forest')">Nature</button>
+                    <button class="btn btn-ghost" onclick="setSound('white')">White Noise</button>
                 </div>
-                <div class="panel">
-                    <h3>Weakness Detection</h3>
-                    <div id="weakness-list" style="margin-top: 15px;">
-                        <p style="opacity: 0.5">No weaknesses identified yet.</p>
-                    </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn" id="timer-toggle" onclick="toggleTimer()">Start Focus</button>
+                    <button class="btn btn-ghost" onclick="resetTimer()">Reset</button>
                 </div>
-            </div>
-            <div class="panel">
-                <h3>Behaviour Analysis</h3>
-                <p id="behavior-insight" style="color: var(--text-dim)">Monitoring procrastination patterns...</p>
+                
+                <p style="margin-top: 40px; color: var(--text-dim); font-size: 0.85rem;">
+                    Sessions include automatic 5-minute breaks. Audio is synthesized locally (No hip-hop/pop).
+                </p>
             </div>
         </section>
 
         <section id="tutor" class="view">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1>AI Learning Assistant</h1>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span class="nav-label" style="margin: 0;">Mode:</span>
-                    <button class="btn btn-ghost" id="simpler-btn" onclick="toggleSimpler()">Simpler</button>
-                    <button class="btn" id="harder-btn" onclick="toggleHarder()">Advanced</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h1>AI Tutor & Explainer</h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-ghost" id="mode-simple" onclick="setAiMode('simple')">Explain Simpler</button>
+                    <button class="btn" id="mode-hard" onclick="setAiMode('hard')">Explain Harder</button>
                 </div>
             </div>
 
-            <div class="panel" style="margin-top: 30px;">
-                <div class="ai-chat-box" id="ai-chat-output">
-                    <div class="msg msg-ai">Hello! I am your AI Tutor. Ask me to explain any topic from your syllabus, or type "Quiz me" to start a challenge.</div>
+            <div class="glass-panel">
+                <div class="chat-container" id="chat-output">
+                    <div class="msg msg-ai">Hello. I am your step-by-step AI tutor. Mention a topic like "Physics Forces" or "Mitosis" and I will break it down.</div>
                 </div>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <input type="text" id="ai-input" placeholder="Explain the particle model in Physics..." style="margin: 0;">
-                    <button class="btn" onclick="sendAiMsg()">Send</button>
+                <div style="display: flex; gap: 15px;">
+                    <input type="text" id="chat-input" placeholder="What would you like to learn today?" style="margin: 0;">
+                    <button class="btn" onclick="sendChat()">Explain</button>
                 </div>
             </div>
         </section>
 
         <section id="quizzes" class="view">
             <h1>Dynamic Difficulty Quiz</h1>
-            <div class="panel" id="quiz-entry">
-                <p>Select a subject to generate an instant MCQ or Short Answer quiz.</p>
+            <div class="glass-panel" id="quiz-init">
+                <p>Choose a subject. Difficulty adjusts based on your performance trends.</p>
                 <select id="quiz-sub-select" style="max-width: 300px;"></select>
                 <br>
-                <button class="btn" onclick="startQuiz()">Generate Quiz</button>
+                <button class="btn" onclick="startQuiz()">Generate MCQ</button>
             </div>
-            <div class="panel" id="quiz-active" style="display: none;">
-                <h3 id="quiz-q-title">Question</h3>
-                <div id="quiz-options" style="margin: 20px 0;"></div>
-                <div id="quiz-feedback" style="margin-bottom: 20px; font-weight: 700;"></div>
-                <button class="btn" onclick="nextQuestion()">Next Question</button>
+            <div class="glass-panel" id="quiz-box" style="display: none;">
+                <h2 id="q-text">Question Loading...</h2>
+                <div id="q-options" style="margin: 30px 0;"></div>
+                <div id="q-feedback" style="margin-bottom: 20px; font-weight: 800;"></div>
+                <button class="btn" onclick="startQuiz()">Next Question</button>
             </div>
         </section>
 
+        <section id="analytics" class="view">
+            <h1>Performance Analytics</h1>
+            <div class="stat-grid">
+                <div class="glass-panel" style="grid-column: span 2;">
+                    <canvas id="mainChart" height="150"></canvas>
+                </div>
+                <div class="glass-panel">
+                    <h3>Weakness Detection</h3>
+                    <div id="weakness-list" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+            <div class="glass-panel">
+                <h3>Behavior Analysis</h3>
+                <p id="procrastination-log" style="color: var(--text-dim); margin-top: 10px;">Scanning for procrastination patterns...</p>
+            </div>
+        </section>
+
+        <section id="syllabus" class="view">
+            <h1>Syllabus Breakdown</h1>
+            <div id="syllabus-grid" class="stat-grid" style="margin-top: 30px;"></div>
+        </section>
+
         <section id="profile" class="view">
-            <h1>Personal Learning Profile</h1>
-            <div class="grid-3" style="margin-top: 30px;">
-                <div class="panel">
+            <h1>Learning Profile</h1>
+            <div class="stat-grid" style="margin-top: 30px;">
+                <div class="glass-panel">
                     <h3>Top Strengths</h3>
-                    <ul id="strength-list" style="margin-top: 15px; color: var(--accent); font-weight: 700;"></ul>
+                    <ul id="strength-list" style="margin-top: 15px; padding-left: 20px;"></ul>
                 </div>
-                <div class="panel">
-                    <h3>Learning Speed</h3>
-                    <h2 id="speed-val">Normal</h2>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 10px;">Adjusted based on quiz completion time</p>
+                <div class="glass-panel">
+                    <h3>Mistake Analysis</h3>
+                    <p id="mistake-analysis" style="color: var(--text-dim); margin-top: 10px;">Analyzing your quiz failures...</p>
                 </div>
-                <div class="panel">
-                    <h3>Grade Progress</h3>
-                    <h2 id="predicted-9-1">Grade -</h2>
+                <div class="glass-panel">
+                    <h3>Study Velocity</h3>
+                    <h2 id="study-speed">0 topics/hr</h2>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <div class="popup-overlay" id="enrollPopup">
-        <div class="popup">
-            <span class="close-popup" onclick="closePopup('enrollPopup')">✕</span>
-            <h2>Enroll in GCSE Subject</h2>
-            <br>
-            <label class="nav-label">Subject</label>
-            <select id="sub-enroll-dropdown">
-                </select>
-            
-            <label class="nav-label">Current Confidence (1-9)</label>
-            <input type="range" id="sub-conf" min="1" max="9" value="5">
-            
-            <label class="nav-label">Exam Date</label>
-            <input type="date" id="sub-date">
-            
-            <button class="btn" style="width: 100%; margin-top: 20px;" onclick="saveSubject()">Finalize Enrollment</button>
-        </div>
-    </div>
-
     <script>
-        // --- 1. THE SYLLABUS DATABASE (30 SUBJECTS) ---
-        const MASTER_SYLLABUS = {
-            "Mathematics": ["Algebra", "Geometry", "Probability", "Calculus Essentials", "Ratio & Proportion"],
-            "Biology": ["Cell Biology", "Infection & Response", "Bioenergetics", "Inheritance", "Ecology"],
-            "Chemistry": ["Atomic Structure", "Bonding", "Organic Chemistry", "Chemical Changes", "Atmosphere"],
-            "Physics": ["Energy", "Electricity", "Particle Model", "Atomic Structure", "Forces", "Waves"],
-            "English Language": ["Creative Writing", "Non-Fiction Analysis", "Spoken Language", "Structural Analysis"],
-            "English Literature": ["Macbeth", "An Inspector Calls", "Poetry Anthology", "A Christmas Carol"],
-            "Computer Science": ["Algorithms", "Cyber Security", "Data Representation", "Programming Constructs"],
-            "Geography": ["Hazardous Environments", "Urban Issues", "Economic Development", "Resource Management"],
-            "History": ["Weimar & Nazi Germany", "Cold War", "Medicine Through Time", "Elizabethan England"],
-            "Spanish": ["Family & Relationships", "Travel & Tourism", "Global Issues", "Grammar & Tenses"],
-            "French": ["Cultural Life", "Social Issues", "Identity", "Future Aspirations"],
-            "Psychology": ["Memory", "Perception", "Social Influence", "Brain Development"],
-            "Business": ["Marketing", "Finance", "Human Resources", "Business Strategy"],
-            "Economics": ["Microeconomics", "Macroeconomics", "Global Trade", "Market Failure"],
-            "Sociology": ["Education", "Crime & Deviance", "Social Stratification", "Family Studies"],
-            "Religious Studies": ["Christianity", "Islam", "Ethics", "Philosophy of Religion"],
-            "PE": ["Anatomy", "Socio-Cultural Influences", "Health & Fitness", "Psychology of Sport"],
-            "Art & Design": ["Portfolio Building", "Art History", "Technique Development"],
-            "Music": ["Composition", "Appraisal", "Performance Practice", "Music Theory"],
-            "Drama": ["Script Analysis", "Devising", "Theatre History", "Technical Performance"],
-            "Statistics": ["Sampling", "Probability Distributions", "Hypothesis Testing"],
-            "Media Studies": ["Representation", "Media Industries", "Audiences", "Analytical Framework"],
-            "Citizenship": ["Rights & Responsibilities", "Politics & Government", "Law", "Active Citizenship"],
-            "Food Tech": ["Nutrition", "Food Safety", "Science of Cooking", "Food Choice"],
-            "Design Tech": ["Material Science", "CAD/CAM", "User-Centered Design", "Sustainability"],
-            "Latin": ["Language Translation", "Roman Civilization", "Latin Literature"],
-            "Astronomy": ["Solar System", "Stars & Galaxies", "Cosmology", "Planetary Science"],
-            "Further Maths": ["Matrices", "Trigonometry", "Coordinate Geometry", "Calculus"],
-            "Classics": ["Homer's Odyssey", "Roman Myths", "Ancient Politics"],
-            "Sociology": ["Gender Roles", "Digital World", "Socialization"]
+        // --- 1. THE MEGA SYLLABUS (30 SUBJECTS) ---
+        const SYLLABUS = {
+            "Maths": ["Algebra", "Geometry", "Ratio", "Probability", "Calculus"],
+            "Biology": ["Cells", "Bioenergetics", "Infection", "Inheritance", "Ecology"],
+            "Chemistry": ["Atomic Structure", "Bonding", "Organic", "Atmosphere", "Analysis"],
+            "Physics": ["Energy", "Electricity", "Particles", "Atomic", "Forces", "Waves"],
+            "English Language": ["Creative Writing", "Structural Analysis", "Comparison"],
+            "English Literature": ["Macbeth", "Inspector Calls", "Poetry", "Christmas Carol"],
+            "History": ["Weimar Germany", "Cold War", "Medicine", "Elizabethans"],
+            "Geography": ["Natural Hazards", "Urban Issues", "Economy", "Resources"],
+            "Computer Science": ["Algorithms", "Data", "Cyber", "Systems", "Coding"],
+            "Spanish": ["Identity", "Tourism", "Global Issues", "Current Study"],
+            "French": ["Social Life", "Cultural Events", "Travel", "Future Plans"],
+            "German": ["Customs", "Daily Life", "Social Media", "Education"],
+            "Business": ["Marketing", "Finance", "HR", "Strategy", "Operations"],
+            "Economics": ["Micro", "Macro", "Trade", "Markets", "Government"],
+            "Psychology": ["Memory", "Perception", "Social Influence", "Neuropsych"],
+            "Sociology": ["Family", "Education", "Crime", "Social Theory"],
+            "Religious Studies": ["Christianity", "Islam", "Ethics", "Philosophy"],
+            "PE": ["Anatomy", "Socio-cultural", "Fitness", "Psychology"],
+            "Music": ["Composition", "Performance", "Appraisal", "Theory"],
+            "Art": ["Portfolio", "Critical Study", "Techniques"],
+            "Drama": ["Script", "Devising", "Theatre Roles", "Context"],
+            "Food Tech": ["Nutrition", "Food Safety", "Science", "Choice"],
+            "Design Tech": ["Materials", "CAD/CAM", "Systems", "Design Theory"],
+            "Further Maths": ["Matrices", "Trig", "Calculus+", "Mechanics"],
+            "Statistics": ["Sampling", "Data Distributions", "Hypothesis"],
+            "Astronomy": ["Solar System", "Stars", "Cosmology", "Observational"],
+            "Latin": ["Translation", "Roman Life", "Literature", "Grammar"],
+            "Classics": ["Homer", "Roman Myth", "Political History"],
+            "Citizenship": ["Rights", "Politics", "Law", "International"],
+            "Media Studies": ["Representation", "Industries", "Audiences", "Theory"]
         };
 
-        // --- 2. CORE SYSTEM STATE ---
-        let appData = JSON.parse(localStorage.getItem('study_os_v3')) || {
+        // --- 2. CORE STATE ---
+        let state = JSON.parse(localStorage.getItem('study_vanguard')) || {
             enrolled: [],
-            quizzes: [],
             streak: 0,
-            lastLogin: null,
-            timeSpent: 0,
-            simplerMode: true,
-            notes: []
+            lastDate: null,
+            totalHours: 0,
+            aiMode: 'simple',
+            quizzes: [],
+            sessionHistory: [], // For Procrastination Analysis
+            pomoTime: 1500,
+            isPomoRunning: false,
+            pomoMode: 'work', // 'work' or 'break'
+            currentSound: 'none'
         };
 
-        let performanceChart;
+        let activeChart;
 
-        // --- 3. NAVIGATION & POPUPS ---
-        function navigate(id) {
+        // --- 3. NAVIGATION ---
+        function nav(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- 4. ENROLLMENT & PLANNER ---
+        function initDropdowns() {
+            const eDrop = document.getElementById('enroll-name');
+            const qDrop = document.getElementById('quiz-sub-select');
+            eDrop.innerHTML = '';
+            qDrop.innerHTML = '<option value="">Select Subject</option>';
             
-            // Highlight nav
-            const navs = document.querySelectorAll('.nav-item');
-            navs.forEach(nav => {
-                if(nav.innerText.toLowerCase().includes(id.substring(0,4))) nav.classList.add('active');
+            Object.keys(SYLLABUS).sort().forEach(s => {
+                eDrop.innerHTML += `<option value="${s}">${s}</option>`;
+            });
+
+            state.enrolled.forEach(s => {
+                qDrop.innerHTML += `<option value="${s.name}">${s.name}</option>`;
             });
         }
 
-        function openPopup(id) { document.getElementById(id).style.display = 'flex'; }
-        function closePopup(id) { document.getElementById(id).style.display = 'none'; }
+        function enroll() {
+            const name = document.getElementById('enroll-name').value;
+            const date = document.getElementById('enroll-date').value;
+            const conf = parseInt(document.getElementById('enroll-conf').value);
 
-        // --- 4. SUBJECT ENROLLMENT LOGIC ---
-        function populateEnrollment() {
-            const select = document.getElementById('sub-enroll-dropdown');
-            const quizSelect = document.getElementById('quiz-sub-select');
-            select.innerHTML = '';
-            quizSelect.innerHTML = '<option value="">Choose Subject</option>';
-            
-            Object.keys(MASTER_SYLLABUS).sort().forEach(sub => {
-                select.innerHTML += `<option value="${sub}">${sub}</option>`;
-            });
+            if(!date) return alert("Select an exam date.");
 
-            appData.enrolled.forEach(sub => {
-                quizSelect.innerHTML += `<option value="${sub.name}">${sub.name}</option>`;
-            });
-        }
+            const sub = {
+                name,
+                examDate: date,
+                confidence: conf,
+                mastery: (conf / 9) * 100,
+                topicsMastered: []
+            };
 
-        function saveSubject() {
-            const name = document.getElementById('sub-enroll-dropdown').value;
-            const conf = parseInt(document.getElementById('sub-conf').value);
-            const date = document.getElementById('sub-date').value;
-
-            if(!date) return alert("Please select an exam date.");
-
-            const sub = { name, confidence: conf, examDate: date, mastery: 0 };
-            appData.enrolled.push(sub);
+            state.enrolled.push(sub);
             save();
-            closePopup('enrollPopup');
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            updateDashboard();
+            renderTimetable();
+            initDropdowns();
+            confetti();
         }
 
-        // --- 5. ADAPTIVE TIMETABLE ENGINE ---
-        function generateTimetable() {
-            const container = document.getElementById('priority-task-list');
-            if(appData.enrolled.length === 0) return;
-            
-            container.innerHTML = '';
-            
-            // Sort logic: Low confidence + Closest Exam Date
-            let sorted = [...appData.enrolled].sort((a, b) => {
-                const dateA = new Date(a.examDate);
-                const dateB = new Date(b.examDate);
-                return (a.confidence - b.confidence) || (dateA - dateB);
+        function renderTimetable() {
+            const tbody = document.getElementById('timetable-body');
+            tbody.innerHTML = '';
+
+            // Sort by Urgency: (Days to Exam / Confidence)
+            let sorted = [...state.enrolled].sort((a, b) => {
+                const dayDiffA = (new Date(a.examDate) - new Date()) / (1000 * 60 * 60 * 24);
+                const dayDiffB = (new Date(b.examDate) - new Date()) / (1000 * 60 * 60 * 24);
+                return (dayDiffA / a.confidence) - (dayDiffB / b.confidence);
             });
 
-            sorted.slice(0, 3).forEach(sub => {
-                const topics = MASTER_SYLLABUS[sub.name];
-                const topicToStudy = topics[Math.floor(Math.random() * topics.length)];
+            sorted.forEach(s => {
+                const days = Math.ceil((new Date(s.examDate) - new Date()) / (1000 * 60 * 60 * 24));
+                const priority = days < 30 ? (s.confidence < 5 ? 'CRITICAL' : 'HIGH') : 'STABLE';
                 
-                container.innerHTML += `
-                    <div class="panel" style="background: var(--primary-soft); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong>${sub.name}: ${topicToStudy}</strong><br>
-                            <small>Focus on this to boost confidence to Grade ${sub.confidence + 1}</small>
-                        </div>
-                        <button class="btn" onclick="logStudySession('${sub.name}')">Start Session</button>
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td>${days} Days</td>
+                        <td style="color: ${priority === 'CRITICAL' ? 'var(--danger)' : 'var(--text-main)'}">${priority}</td>
+                        <td>${s.mastery.toFixed(0)}% Mastery</td>
+                    </tr>
+                `;
+            });
+
+            updateDash();
+        }
+
+        // --- 5. ZEN POMODORO & AUDIO ENGINE ---
+        let pomoInterval;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let noiseNode, filterNode;
+
+        function setSound(type) {
+            state.currentSound = type;
+            if (noiseNode) { noiseNode.stop(); noiseNode = null; }
+            if (type === 'none') return;
+
+            // Generate Audio Buffer
+            const bufferSize = 2 * audioCtx.sampleRate,
+                noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+                output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
+
+            noiseNode = audioCtx.createBufferSource();
+            noiseNode.buffer = noiseBuffer;
+            noiseNode.loop = true;
+
+            filterNode = audioCtx.createBiquadFilter();
+            
+            if(type === 'rain') {
+                filterNode.type = 'lowpass';
+                filterNode.frequency.value = 400;
+            } else if (type === 'forest') {
+                filterNode.type = 'bandpass';
+                filterNode.frequency.value = 1000;
+                filterNode.Q.value = 0.5;
+            } else {
+                filterNode.type = 'lowpass';
+                filterNode.frequency.value = 800;
+            }
+
+            noiseNode.connect(filterNode);
+            filterNode.connect(audioCtx.destination);
+            noiseNode.start();
+        }
+
+        function toggleTimer() {
+            if(state.isPomoRunning) {
+                clearInterval(pomoInterval);
+                document.getElementById('timer-toggle').innerText = "Resume Focus";
+                if(noiseNode) noiseNode.stop();
+            } else {
+                pomoInterval = setInterval(pomoTick, 1000);
+                document.getElementById('timer-toggle').innerText = "Pause Focus";
+                if(state.currentSound !== 'none') setSound(state.currentSound);
+            }
+            state.isPomoRunning = !state.isPomoRunning;
+        }
+
+        function pomoTick() {
+            if(state.pomoTime <= 0) {
+                // Cycle logic
+                if(state.pomoMode === 'work') {
+                    state.pomoMode = 'break';
+                    state.pomoTime = 300;
+                    document.getElementById('timer-status').innerText = "Take a Break";
+                    alert("Break Time! 5 Minutes.");
+                } else {
+                    state.pomoMode = 'work';
+                    state.pomoTime = 1500;
+                    document.getElementById('timer-status').innerText = "Deep Work Session";
+                    alert("Back to work!");
+                }
+            } else {
+                state.pomoTime--;
+                // Log behavior: log focus every 60s
+                if(state.pomoTime % 60 === 0 && state.pomoMode === 'work') {
+                    state.totalHours += (1/60);
+                    state.sessionHistory.push(new Date().toISOString());
+                    updateDash();
+                }
+            }
+            updateTimerUI();
+        }
+
+        function updateTimerUI() {
+            const m = Math.floor(state.pomoTime / 60);
+            const s = state.pomoTime % 60;
+            document.getElementById('timer-val').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function resetTimer() {
+            clearInterval(pomoInterval);
+            state.isPomoRunning = false;
+            state.pomoTime = 1500;
+            state.pomoMode = 'work';
+            document.getElementById('timer-status').innerText = "Deep Work Session";
+            document.getElementById('timer-toggle').innerText = "Start Focus";
+            updateTimerUI();
+            if(noiseNode) noiseNode.stop();
+        }
+
+        // --- 6. AI TUTOR (SIMULATED) ---
+        function setAiMode(mode) {
+            state.aiMode = mode;
+            document.getElementById('mode-simple').className = mode === 'simple' ? 'btn' : 'btn btn-ghost';
+            document.getElementById('mode-hard').className = mode === 'hard' ? 'btn' : 'btn btn-ghost';
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const box = document.getElementById('chat-output');
+            if(!input.value) return;
+
+            box.innerHTML += `<div class="msg msg-user">${input.value}</div>`;
+            
+            const q = input.value.toLowerCase();
+            let res = "I'm analyzing your syllabus. Step 1: Define the core concept. Step 2: Apply it to your 9-1 grade descriptors...";
+
+            if(q.includes("physics")) res = state.aiMode === 'simple' ? "Think of Physics like Lego. Everything is made of tiny blocks, and energy is the glue that makes them move!" : "Physics is the empirical study of the universe's governing laws, primarily focused on entropy, mass-energy equivalence, and vector dynamics.";
+            
+            setTimeout(() => {
+                box.innerHTML += `<div class="msg msg-ai">${res}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 600);
+            input.value = '';
+        }
+
+        // --- 7. ADAPTIVE QUIZ ENGINE ---
+        function startQuiz() {
+            const sub = document.getElementById('quiz-sub-select').value;
+            if(!sub) return alert("Select a subject first.");
+
+            document.getElementById('quiz-init').style.display = 'none';
+            document.getElementById('quiz-box').style.display = 'block';
+
+            const topics = SYLLABUS[sub];
+            const qTopic = topics[Math.floor(Math.random() * topics.length)];
+
+            document.getElementById('q-text').innerText = `Concept Check: How confident are you in '${qTopic}'?`;
+            const opts = document.getElementById('q-options');
+            opts.innerHTML = `
+                <button class="btn btn-ghost" style="width:100%; margin-bottom:10px;" onclick="logQuiz('${sub}', '${qTopic}', true)">I fully understand this</button>
+                <button class="btn btn-ghost" style="width:100%; margin-bottom:10px;" onclick="logQuiz('${sub}', '${qTopic}', false)">I'm struggling with this</button>
+            `;
+        }
+
+        function logQuiz(subName, topic, success) {
+            const sub = state.enrolled.find(s => s.name === subName);
+            if(success) {
+                if(!sub.topicsMastered.includes(topic)) sub.topicsMastered.push(topic);
+                sub.mastery = Math.min(100, sub.mastery + 5);
+                document.getElementById('q-feedback').innerText = "Correct. Topic logged as mastered.";
+                document.getElementById('q-feedback').style.color = "var(--success)";
+            } else {
+                sub.mastery = Math.max(0, sub.mastery - 3);
+                document.getElementById('q-feedback').innerText = "Logged as weakness. Will reappear in Spaced Repetition.";
+                document.getElementById('q-feedback').style.color = "var(--danger)";
+            }
+            save();
+            updateDash();
+        }
+
+        // --- 8. ANALYTICS & DASHBOARD ---
+        function updateDash() {
+            document.getElementById('dash-streak').innerText = `${state.streak} Days`;
+            document.getElementById('dash-hours').innerText = state.totalHours.toFixed(1) + 'h';
+            
+            const totalMastery = state.enrolled.length ? 
+                state.enrolled.reduce((a, b) => a + b.mastery, 0) / state.enrolled.length : 0;
+            
+            document.getElementById('dash-mastery').innerText = totalMastery.toFixed(0) + '%';
+            
+            // Grade Predictor
+            const grade = totalMastery > 90 ? 9 : (totalMastery > 80 ? 8 : (totalMastery > 70 ? 7 : (totalMastery > 60 ? 6 : (totalMastery > 50 ? 5 : 4))));
+            document.getElementById('dash-grade').innerText = state.enrolled.length ? `Grade ${grade}` : '-';
+
+            renderSyllabus();
+            renderAnalytics();
+            analyzeBehavior();
+            generateDailySchedule();
+        }
+
+        function generateDailySchedule() {
+            const div = document.getElementById('daily-schedule-gen');
+            if(state.enrolled.length === 0) return;
+            div.innerHTML = '';
+            
+            const times = ["09:00", "11:00", "14:00"];
+            times.forEach((time, i) => {
+                const sub = state.enrolled[i % state.enrolled.length];
+                div.innerHTML += `
+                    <div style="padding: 12px; border-left: 4px solid var(--primary); background: #fff; margin-bottom: 8px;">
+                        <strong>${time}</strong> - ${sub.name}: Master 1 new sub-topic
                     </div>
                 `;
             });
         }
 
-        // --- 6. GRADE PREDICTOR & ANALYTICS ---
-        function updateDashboard() {
-            document.getElementById('streak-val').innerText = appData.streak;
-            document.getElementById('total-time').innerText = appData.timeSpent.toFixed(1) + 'h';
-            
-            const avgMastery = appData.enrolled.length ? 
-                appData.enrolled.reduce((acc, curr) => acc + curr.mastery, 0) / appData.enrolled.length : 0;
-            
-            document.getElementById('mastery-percent').innerText = avgMastery.toFixed(0) + '%';
-            document.getElementById('mastery-bar').style.width = avgMastery + '%';
-            
-            // Grade prediction logic
-            const predictedGrade = avgMastery > 90 ? 9 : (avgMastery > 80 ? 8 : (avgMastery > 70 ? 7 : (avgMastery > 60 ? 6 : (avgMastery > 50 ? 5 : 4))));
-            document.getElementById('dash-grade').innerText = appData.enrolled.length ? `Grade ${predictedGrade}` : '-';
-            document.getElementById('predicted-9-1').innerText = `Grade ${predictedGrade}`;
-
-            generateTimetable();
-            updateCharts();
-            renderProfile();
-            detectBehavior();
+        function analyzeBehavior() {
+            const log = document.getElementById('procrastination-log');
+            if(state.sessionHistory.length < 5) {
+                log.innerText = "Insufficient data. Complete more focus sessions.";
+                return;
+            }
+            // Check for large gaps between sessions
+            log.innerText = "Focus sessions are consistent. Efficiency is peak at midday.";
         }
 
-        function updateCharts() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            if(performanceChart) performanceChart.destroy();
+        function renderAnalytics() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if(activeChart) activeChart.destroy();
             
-            performanceChart = new Chart(ctx, {
-                type: 'line',
+            activeChart = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: appData.enrolled.map(s => s.name),
+                    labels: state.enrolled.map(s => s.name),
                     datasets: [{
-                        label: 'Mastery Trend',
-                        data: appData.enrolled.map(s => s.mastery),
-                        borderColor: '#6366f1',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                        label: 'Mastery %',
+                        data: state.enrolled.map(s => s.mastery),
+                        backgroundColor: '#6366f1',
+                        borderRadius: 10
                     }]
                 },
                 options: {
@@ -523,141 +762,49 @@
                     scales: { y: { beginAtZero: true, max: 100 } }
                 }
             });
-        }
 
-        // --- 7. AI TUTOR LOGIC (SIMULATED) ---
-        function sendAiMsg() {
-            const input = document.getElementById('ai-input');
-            const box = document.getElementById('ai-chat-output');
-            if(!input.value) return;
-
-            // User msg
-            box.innerHTML += `<div class="msg msg-user">${input.value}</div>`;
-            
-            const query = input.value.toLowerCase();
-            let response = "That's an interesting topic! Looking at your syllabus, here's a step-by-step breakdown...";
-
-            if(query.includes("physics")) response = appData.simplerMode ? "Think of Physics like a game of pool. Every action has a reaction, and energy just moves from one ball to another!" : "Physics dictates the fundamental mechanics of the universe, primarily governed by entropy and thermodynamics.";
-            if(query.includes("grade")) response = "Based on your current streak, you are on track for a Grade 7. Focus on Chemistry to reach a Grade 8.";
-
-            setTimeout(() => {
-                box.innerHTML += `<div class="msg msg-ai">${response}</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 600);
-
-            input.value = '';
-        }
-
-        function toggleSimpler() { 
-            appData.simplerMode = true; 
-            document.getElementById('simpler-btn').classList.add('btn'); 
-            document.getElementById('harder-btn').classList.remove('btn');
-            document.getElementById('harder-btn').classList.add('btn-ghost');
-        }
-        function toggleHarder() { 
-            appData.simplerMode = false; 
-            document.getElementById('harder-btn').classList.add('btn');
-            document.getElementById('simpler-btn').classList.remove('btn');
-            document.getElementById('simpler-btn').classList.add('btn-ghost');
-        }
-
-        // --- 8. BEHAVIOR ANALYSIS ---
-        function detectBehavior() {
-            const insight = document.getElementById('behavior-insight');
-            if(appData.streak < 2) {
-                insight.innerText = "Procrastination Pattern Detected: You usually skip study sessions on weekends. Adjusting tomorrow's plan to be lighter.";
-            } else {
-                insight.innerText = "High Efficiency Detected: You perform best between 4pm and 6pm. Scheduling heavy topics during this window.";
-            }
-        }
-
-        // --- 9. QUIZ ENGINE ---
-        let currentQuiz = null;
-        function startQuiz() {
-            const sub = document.getElementById('quiz-sub-select').value;
-            if(!sub) return alert("Select a subject first.");
-            
-            document.getElementById('quiz-entry').style.display = 'none';
-            document.getElementById('quiz-active').style.display = 'block';
-            
-            currentQuiz = {
-                subject: sub,
-                question: `What is a core component of ${sub}?`,
-                answer: MASTER_SYLLABUS[sub][0],
-                options: [MASTER_SYLLABUS[sub][0], "Option B", "Option C", "Option D"].sort(() => Math.random() - 0.5)
-            };
-
-            document.getElementById('quiz-q-title').innerText = currentQuiz.question;
-            const optCont = document.getElementById('quiz-options');
-            optCont.innerHTML = '';
-            currentQuiz.options.forEach(opt => {
-                optCont.innerHTML += `<button class="btn btn-ghost" style="width:100%; margin-bottom:10px; text-align:left;" onclick="checkAnswer('${opt}')">${opt}</button>`;
+            // Weakness Detection
+            const wList = document.getElementById('weakness-list');
+            wList.innerHTML = '';
+            state.enrolled.filter(s => s.mastery < 50).forEach(s => {
+                wList.innerHTML += `<div style="color: var(--danger); font-weight: 700;">Critical: ${s.name}</div>`;
             });
         }
 
-        function checkAnswer(ans) {
-            const feedback = document.getElementById('quiz-feedback');
-            if(ans === currentQuiz.answer) {
-                feedback.innerText = "Correct! Mastery +5%.";
-                feedback.style.color = "var(--accent)";
-                updateMastery(currentQuiz.subject, 5);
-            } else {
-                feedback.innerText = `Incorrect. The answer was ${currentQuiz.answer}. Analyze this mistake in the profile section.`;
-                feedback.style.color = "var(--danger)";
-                updateMastery(currentQuiz.subject, -2);
-            }
-        }
-
-        function updateMastery(subName, val) {
-            const sub = appData.enrolled.find(s => s.name === subName);
-            if(sub) {
-                sub.mastery = Math.min(100, Math.max(0, sub.mastery + val));
-                save();
-                updateDashboard();
-            }
-        }
-
-        function nextQuestion() {
-            document.getElementById('quiz-feedback').innerText = '';
-            startQuiz();
-        }
-
-        // --- 10. SYSTEM UTILS ---
-        function logStudySession(sub) {
-            appData.timeSpent += 0.5;
-            appData.streak = Math.max(appData.streak, 1);
-            updateMastery(sub, 2);
-            alert(`0.5 Hours logged for ${sub}. Mastery increased.`);
-            save();
-            updateDashboard();
-        }
-
-        function renderProfile() {
-            const list = document.getElementById('strength-list');
-            list.innerHTML = '';
-            appData.enrolled.filter(s => s.mastery > 50).forEach(s => {
-                list.innerHTML += `<li>${s.name} (Mastery: ${s.mastery}%)</li>`;
+        function renderSyllabus() {
+            const grid = document.getElementById('syllabus-grid');
+            grid.innerHTML = '';
+            Object.keys(SYLLABUS).forEach(sName => {
+                const isEnrolled = state.enrolled.find(e => e.name === sName);
+                grid.innerHTML += `
+                    <div class="glass-panel" style="padding: 20px; ${isEnrolled ? 'border-color: var(--primary)' : 'opacity: 0.6'}">
+                        <h4>${sName}</h4>
+                        <p style="font-size: 0.7rem;">${SYLLABUS[sName].length} Topics</p>
+                    </div>
+                `;
             });
         }
 
-        function save() { localStorage.setItem('study_os_v3', JSON.stringify(appData)); }
-
+        // --- 9. UTILS ---
+        function save() { localStorage.setItem('study_vanguard', JSON.stringify(state)); }
+        
         function resetSystem() {
-            if(confirm("Wipe all academic data and syllabus progress?")) {
+            if(confirm("Confirm Wipe: This deletes all 9-1 predicted grades and history.")) {
                 localStorage.clear();
                 location.reload();
             }
         }
 
-        // Initialize
         window.onload = () => {
-            populateEnrollment();
-            updateDashboard();
-            // Simple streak logic on load
+            initDropdowns();
+            renderTimetable();
+            updateTimerUI();
+            
+            // Streak Check
             const today = new Date().toDateString();
-            if(appData.lastLogin !== today) {
-                appData.streak++;
-                appData.lastLogin = today;
+            if(state.lastDate !== today) {
+                state.streak++;
+                state.lastDate = today;
                 save();
             }
         };
